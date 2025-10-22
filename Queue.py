@@ -21,12 +21,12 @@ class Queue:
         """
         self._capacity = capacity
         self._size = 0
-        self._queue = [None] * capacity
         self._front = 0
         self._expand_ratio = 2
         self._reduce_threshold = 0.25
-        self._rear = capacity -1
-
+        
+        self.array = [None] * capacity
+        print("Queue Created")
 
 
     def __len__(self):
@@ -42,7 +42,7 @@ class Queue:
         (INCLUDE the None elements for visualization purposes)
         This method returns a String.
         """
-        return "[" +",".join(str(item) for item in self._queue) +"]"
+        return "[" +" ".join(str(item) for item in self.array) +"]"
         
 
     def is_empty(self):
@@ -58,7 +58,9 @@ class Queue:
         The method returns None if the queue is empty
         This method does not remove the element from the queue
         """
-        return self._queue[self._front]
+        if self.is_empty():
+            return None
+        return self.array[self._front]
     
     def set_front(self, front_id):
         """
@@ -83,6 +85,7 @@ class Queue:
         It USES the EQUATION discussed in class to get the value of the new front.
         It returns the new front.
         """
+        return (self._front + 1) % self._capacity
 
 
     def compute_next_available(self):
@@ -91,6 +94,7 @@ class Queue:
         It USES the EQUATION discussed in class to get the next index.
         It returns the next available index.
         """
+        return (self._front + self._size) % self._capacity
 
     def dequeue(self):
         """
@@ -107,6 +111,21 @@ class Queue:
         It shows the message "Removing. New Front."
         It reduces the size of the queue/
         """
+        if self.is_empty():
+            print("Empty")
+            return
+
+        element_to_remove = self.array[self._front]
+        new_front = self.compute_front()
+        print(f"Removing. New Front: {new_front}")
+        self.array[self._front] = None
+        self.set_front(new_front)
+        self._size -=1
+        if self._size <= (self._capacity *self._reduce_threshold):
+            self.resize(int(self._capacity * self._reduce_threshold))
+
+        return element_to_remove
+
 
     def enqueue(self, item):
         """
@@ -121,6 +140,15 @@ class Queue:
         -------------
         item : int. The item to add to the queue
         """
+        if self._size == self._capacity:
+            self.resize(self._expand_ratio * self._size)
+
+        _next = self.compute_next_available()
+        print(f"\tInserting at index: {_next}")
+        self.array[_next] = item
+        self._size +=1
+        return
+
 
     def resize(self, new_cap):
         """
@@ -134,3 +162,15 @@ class Queue:
         ------------
         new_cap : int. The new capacity for the array
         """
+        print("\tResizing...")
+        resized_array = [None]*new_cap
+        for i in range(self._size):
+            resized_array[i] = self.array[(self._front + i)%self._capacity]
+        self.array = resized_array
+        self._capacity = new_cap
+        self._front = 0
+
+
+
+
+
