@@ -19,12 +19,22 @@ class Queue:
         -------------
         capacity : int. The initial capacity for the array
         """
+        self._capacity = capacity
+        self._size = 0
+        self._queue = [None] * capacity
+        self._front = 0
+        self._expand_ratio = 2
+        self._reduce_threshold = 0.25
+        self._rear = capacity -1
+
 
 
     def __len__(self):
         """
         Method to return the length of the queue (the valid elements)
         """
+        return self._size
+
 
     def __str__(self):
         """
@@ -32,12 +42,15 @@ class Queue:
         (INCLUDE the None elements for visualization purposes)
         This method returns a String.
         """
+        return "[" +",".join(str(item) for item in self._queue) +"]"
+        
 
     def is_empty(self):
         """
         Method to check if the queue is empty
         The method returns True or False if queue is empty
         """
+        return self._size == 0
 
     def peek(self):
         """
@@ -45,6 +58,7 @@ class Queue:
         The method returns None if the queue is empty
         This method does not remove the element from the queue
         """
+        return self._queue[self._front]
     
     def set_front(self, front_id):
         """
@@ -53,6 +67,7 @@ class Queue:
         -----------
         front_id : int. The index to be used as front of the circular queue
         """
+        self._front = front_id
 
     def get_front(self):
         """
@@ -68,6 +83,7 @@ class Queue:
         It USES the EQUATION discussed in class to get the value of the new front.
         It returns the new front.
         """
+
 
     def compute_next_available(self):
         """
@@ -117,3 +133,4 @@ class Queue:
         PARAMETERS:
         ------------
         new_cap : int. The new capacity for the array
+        """
